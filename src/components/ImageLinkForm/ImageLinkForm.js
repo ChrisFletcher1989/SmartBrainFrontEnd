@@ -1,14 +1,14 @@
 import React from "react";
 import './ImageLinkForm.css'
-
+//The input form (for picture url)
 
 const ImageLinkForm = ({ onInputChange, onButtonSubmit }) => {
     return (
         
         <div>
-            <p className="f3">
-                {'This Magic Brain will detect faces in your pictures. Give it a try.'}<br />
-                {'Magic Brain はAI使用で写真内の顔を検出します。やってみない？'}
+            <p className="f3 reactive">
+                {'This Smart Brain will detect faces in your pictures, and tell you which celebrity it is. Give it a try.'}<br />
+                {'スマートブレインはAI使用で写真内の顔を検出して、セレブリティ内　"だれ"　か教えることします。やってみない？'}
             </p>
             <div className="center">
                 <div className="form center pa4 br3 shadow-5">

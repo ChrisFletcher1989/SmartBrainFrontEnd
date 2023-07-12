@@ -1,5 +1,5 @@
 import React from "react";
-
+//States
 class Register extends React.Component {
 
 constructor(props) {
@@ -20,6 +20,7 @@ this.setState({email: event.target.value})
 onPasswordChange = (event) => {
   this.setState({password: event.target.value})
     }
+//Get user data
 
     onSubmitSignIn = () => {
       fetch('http://localhost:3000/register', {
@@ -33,7 +34,9 @@ onPasswordChange = (event) => {
       })      
       .then(response => response.json())
       .then(user => {
-        if(user) {
+
+        //Return route
+        if(user.id) {
         this.props.loadUser(user)
         this.props.onRouteChange('home')
 
@@ -41,6 +44,7 @@ onPasswordChange = (event) => {
       })
     }
 
+    //The html
 render () {
     return (
         <article className="br6 ba b--black-10 mv4 w-100 w-50-m w-35-l mw6 shadow-5 center">

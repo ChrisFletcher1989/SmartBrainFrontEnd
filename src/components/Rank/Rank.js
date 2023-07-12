@@ -1,6 +1,6 @@
 import React from "react";
 
-
+//Set how many faces the user has entered (lifetime)
 const Rank = ({ name, entries }) => {
     return (
         

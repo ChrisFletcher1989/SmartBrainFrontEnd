@@ -1,5 +1,5 @@
 import React from "react";
-
+//States
 class Signin extends React.Component {
   constructor(props) {
     super(props);
@@ -8,13 +8,15 @@ class Signin extends React.Component {
       signInPassword: ''
     }
   }
-  
+  //Inputs
   onEmailChange = (event) => {
 this.setState({signInEmail: event.target.value})
   }
   onPasswordChange = (event) => {
     this.setState({signInPassword: event.target.value})
       }
+
+    //Fetch user from server
       onSubmitSignIn = () => {
         fetch('http://localhost:3000/signin', {
           method: 'post',
@@ -33,7 +35,7 @@ this.setState({signInEmail: event.target.value})
           }
         })
       }
-   
+//The html
 
   render() {
 const { onRouteChange } = this.props;

@@ -10,39 +10,25 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import DetectCeleb from './components/DetectCeleb/DetectCeleb';
 
-const returnClarifaiRequestOptions = (imageUrl) => {
- const PAT ='0c1e3431a67a413db04239c90b89d1db';
- const USER_ID ='chrisfletcher';       
- const APP_ID ='smartbrain';
- const IMAGE_URL = imageUrl;
-
-const raw = JSON.stringify({
-        "user_app_id": {
-            "user_id": USER_ID,
-            "app_id": APP_ID
-        },
-        "inputs": [
-            {
-                "data": {
-                    "image": {
-                        "url": IMAGE_URL
-                    }
-                }
-            }
-        ]
-    });
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Key ' + PAT
-      },
-  body: raw
-};
-return requestOptions;
+//set Initial state
+const initialState = {
+  
+ input: '',
+      imageUrl: '',
+      box: {},
+      box2: {},
+      calculateCeleb: [],
+      route: 'signin',
+      isSignedIn: false,
+      user: {
+            id: "",
+            name: "",
+            email: "",
+            entries: 0,
+            joined: ""      
+      }
+//Components
 }
-
-
 class App extends Component {
   constructor () {
     super ();
@@ -63,7 +49,18 @@ class App extends Component {
       }
     } 
   }
- 
+  //Routes
+  onRouteChange = (route) => {
+    if (route === 'signout') {
+      this.setState(initialState)
+    }
+    else if (route === 'home'){
+      this.setState({isSignedIn: true})
+    }
+    this.setState({route: route});
+  }
+  
+ //Get user from server
   loadUser = (data) => {
     this.setState ({user: {
       id: data.id,
@@ -74,8 +71,63 @@ class App extends Component {
     }})
   }
 
+
+  onInputChange = (event) => {
+    this.setState({input: event.target.value})
+
+
+    //Pass input to server and return JSON from it's Celeb recognition API
+      }
+      onButtonSubmit = () => {
+        this.setState({ imageUrl: this.state.input });
+        fetch('http://localhost:3000/imageurl', {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            input: this.state.input
+          })
+        })
+          .then(response => response.json())
+
+          //Continue to add count to profile
+          .then(response => {
+            if (response) {
+              console.log("response from server", response);
+              fetch('http://localhost:3000/image', {
+                method: 'put',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  id: this.state.user.id
+                })
+              })
+                .then(response => response.json())
+                .then(count => {
+                  this.setState(Object.assign(this.state.user, { entries: count }))
+                })
+                .catch(console.log);
+            }
+      
+            this.displayCelebBox(this.calculateCeleb(response));
+
+            //Fetch box from facial recognition API (via server)
+      
+            fetch('http://localhost:3000/imagedetect', {
+              method: 'post',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                input: this.state.input
+              })
+            })
+              .then(response => response.json())
+              .then(response => this.displayFaceBox(this.calculateFaceLocation(response)))
+              .catch(err => console.log('error', err));
+          })
+          .catch(err => console.log('error', err));
+      }
+
+  //Box around face
 calculateFaceLocation = (data) => {
-  console.log(data)
+  console.log("Face Location API response", data)
 const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
  const image = document.getElementById('inputImage');
   const width = Number(image.width);
@@ -87,12 +139,13 @@ const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     bottomRow: height - (clarifaiFace.bottom_row * height)
   }
 }   
-
+//Recognize celebrity functions
   calculateCeleb = (data) => {
-    console.log("response from API", data) 
-    const clarifaiCeleb = data.outputs[0].data.concepts[0];
-    console.log(clarifaiCeleb)
-     let Celebrity = clarifaiCeleb.name.toUpperCase() 
+    console.log("response from celeb API", data) 
+    let clarifaiCeleb = data.outputs[0].data.concepts[0];
+    console.log(clarifaiCeleb.value)
+     let Celebrity = clarifaiCeleb.name.toUpperCase()
+   
      if (clarifaiCeleb.value > .9) return{
       Accuracy: "Confidence Level: Certain",
       celebrity: Celebrity  
@@ -121,61 +174,18 @@ const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
         celebrity: Celebrity
       }
     }
-  //function to grab correct details from API and return as <p>?
+  //function to grab correct details from API and return as <p>
 
   displayFaceBox = (box) => {
+    console.log("box", box)
     this.setState({box: box})
   }
   displayCelebBox = (box2) => {
-    console.log(box2)
+    console.log("celeb", box2)
     this.setState({box2: box2})
   }
 
-
-  onInputChange = (event) => {
-this.setState({input: event.target.value})
-  }
-  onButtonSubmit = () => {
-    this.setState({imageUrl: this.state.input});
-    const MODEL_ID = 'face-detection';
-    const MODEL_ID2 = 'celebrity-face-recognition';
-
-     fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", returnClarifaiRequestOptions(this.state.input)) 
-  .then(response => 
-    response.json())
-  .then(response => this.displayFaceBox(this.calculateFaceLocation(response)))
-
-  .catch(err => console.log('error', err));
-  fetch("https://api.clarifai.com/v2/models/" + MODEL_ID2 + "/outputs", returnClarifaiRequestOptions(this.state.input)) 
-  .then(response => {
-    if(response) {
-      fetch('http://localhost:3000/image', {
-        method: 'put',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({
-            id: this.state.user.id
-          })
-        })
-        .then(response => response.json())
-        .then(count => {
-          this.setState(Object.assign(this.state.user, { entries: count}))
-        })
-      }
-      
-    this.displayCelebBox(this.calculateCeleb(response))
-      })
-
-  .catch(err => console.log('error', err));
-    }
-onRouteChange = (route) => {
-  if (route === 'signout') {
-    this.setState({isSignedIn: false})
-  }
-  else if (route === 'home'){
-    this.setState({isSignedIn: true})
-  }
-  this.setState({route: route});
-}
+//The html
 
   render() {
     const { isSignedIn, imageUrl, route, box, box2 } = this.state;

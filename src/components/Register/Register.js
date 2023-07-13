@@ -23,7 +23,7 @@ onPasswordChange = (event) => {
 //Get user data
 
     onSubmitSignIn = () => {
-      fetch('http://localhost:3000/register', {
+      fetch('https://git.heroku.com/fierce-cliffs-57128.git/register', {
         method: 'post',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({

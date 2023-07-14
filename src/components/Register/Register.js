@@ -23,7 +23,6 @@ onPasswordChange = (event) => {
 //Get user data
 
     onSubmitSignIn = () => {
-      if(this.state.password.length > 5 && this.state.email.indexOf('@') > -1){
       fetch('https://fierce-cliffs-57128-f05cf640738b.herokuapp.com/register', {
         method: 'post',
         headers: {'Content-Type': 'application/json'},
@@ -45,7 +44,7 @@ onPasswordChange = (event) => {
         }
         
       })
-    }
+    
     }
     
 

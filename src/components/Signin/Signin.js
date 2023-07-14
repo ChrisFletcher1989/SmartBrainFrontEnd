@@ -18,7 +18,7 @@ this.setState({signInEmail: event.target.value})
 
     //Fetch user from server
       onSubmitSignIn = () => {
-        fetch('https://git.heroku.com/fierce-cliffs-57128.git/signin', {
+        fetch('https://fierce-cliffs-57128-f05cf640738b.herokuapp.com/signin', {
           method: 'post',
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify({

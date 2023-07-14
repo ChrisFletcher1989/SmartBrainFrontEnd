@@ -80,7 +80,7 @@ class App extends Component {
       }
       onButtonSubmit = () => {
         this.setState({ imageUrl: this.state.input });
-        fetch('https://git.heroku.com/fierce-cliffs-57128.git/imageurl', {
+        fetch('https://fierce-cliffs-57128-f05cf640738b.herokuapp.com/imageurl', {
           method: 'post',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -93,7 +93,7 @@ class App extends Component {
           .then(response => {
             if (response) {
               console.log("response from server", response);
-              fetch('https://git.heroku.com/fierce-cliffs-57128.git:3000/image', {
+              fetch('https://fierce-cliffs-57128-f05cf640738b.herokuapp.com/image', {
                 method: 'put',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -111,7 +111,7 @@ class App extends Component {
 
             //Fetch box from facial recognition API (via server)
       
-            fetch('https://git.heroku.com/fierce-cliffs-57128.git/imagedetect', {
+            fetch('https://fierce-cliffs-57128-f05cf640738b.herokuapp.com/imagedetect', {
               method: 'post',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({

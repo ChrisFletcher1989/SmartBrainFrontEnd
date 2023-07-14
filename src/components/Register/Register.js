@@ -23,9 +23,10 @@ onPasswordChange = (event) => {
 //Get user data
 
     onSubmitSignIn = () => {
-      fetch('https://git.heroku.com/fierce-cliffs-57128.git/register', {
+      if(this.state.password.length > 5 && this.state.email.indexOf('@') > -1){
+      fetch('https://fierce-cliffs-57128-f05cf640738b.herokuapp.com/register', {
         method: 'post',
-        headers: {'Content-Type':'application/json'},
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
           email: this.state.email,
           password: this.state.password,
@@ -34,15 +35,19 @@ onPasswordChange = (event) => {
       })      
       .then(response => response.json())
       .then(user => {
-
+      
         //Return route
         if(user.id) {
         this.props.loadUser(user)
         this.props.onRouteChange('home')
 
+        
         }
+        
       })
     }
+    }
+    
 
     //The html
 render () {
@@ -71,10 +76,10 @@ render () {
               />
             </div>
             <div className="mv3">
-              <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
+              <label className="db fw6 lh-copy f6" htmlFor="password">Password 6桁以上</label>
               <input className="b pa2 input-reset ba4 hover-bg-black hover-white w-100" 
               type="password" 
-              name="password"  placeholder="パスワードご記入ください"
+              name="password"  placeholder="AT LEAST 6 characters"
               id="password" 
                 onChange={this.onPasswordChange}
               />

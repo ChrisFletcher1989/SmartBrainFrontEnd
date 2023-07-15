@@ -17,6 +17,9 @@ const ImageLinkForm = ({ onInputChange, onButtonSubmit }) => {
                     onClick={onButtonSubmit}>Detect</button>
                     </div>
             </div>
+            <p className="f6 reactive">
+            {'Limitations: Links must be pure image links and not links to websites containing images. URLS which end in jpg or =CAU are examples of pure images.'}
+</p>
         </div>
     );
 }

@@ -8,6 +8,8 @@ const ImageLinkForm = ({ onInputChange, onButtonSubmit }) => {
         <div>
             <p className="f3 reactive">
                 {'This Smart Brain will detect faces in your pictures, and tell you which celebrity it is. Give it a try.'}<br />
+                </p>
+                <p className="f4 reactive">
                 {'スマートブレインはAI使用で写真内の顔を検出して、セレブリティ内　"だれ"　か教えることします。やってみない？'}
             </p>
             <div className="center">
